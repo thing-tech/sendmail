@@ -1,18 +1,14 @@
 <?php
+
 namespace frontend\models;
 
-use yii\base\Model;
-use common\models\User;
+use common\models\Setting;
 
 /**
  * Signup form
  */
-class SignupForm extends Model
+class SettingForm extends Setting
 {
-    public $username;
-    public $email;
-    public $password;
-
 
     /**
      * @inheritdoc
@@ -20,19 +16,8 @@ class SignupForm extends Model
     public function rules()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-
-            ['email', 'trim'],
-            ['email', 'required'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => 6],
+            [['name', 'from_name', 'from_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password'], 'required'],
+            [['smtp_ssl', 'allowed_attachments'], 'string']
         ];
     }
 
@@ -41,18 +26,16 @@ class SignupForm extends Model
      *
      * @return User|null the saved model or null if saving fails
      */
-    public function signup()
+    public function edit()
     {
-        if (!$this->validate()) {
+        if (!$this->validate())
+        {
             return null;
         }
-        
-        $user = new User();
-        $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
-        $user->generateAuthKey();
-        
-        return $user->save() ? $user : null;
+
+        $model = Setting::findOne(['user_id' => \Yii::$app->user->id]);
+        $model->attributes = $this->attributes;
+        return $model->save() ? $model : null;
     }
+
 }

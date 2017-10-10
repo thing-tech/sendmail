@@ -17,11 +17,10 @@ class Setting extends ActiveRecord
      */
     public function rules()
     {
-        $rules = [
-            [['name', 'form_name', 'form_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password'], 'required'],
-            ['smtp_ssl', 'string']
+            return [
+            [['user_id','name', 'from_name', 'from_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password'], 'string'],
+            [['smtp_ssl', 'allowed_attachments'], 'string']
         ];
-        return array_merge(parent::rules(), $rules);
     }
 
     /**
@@ -46,16 +45,6 @@ class Setting extends ActiveRecord
                 ],
             ],
         ]);
-    }
-
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert))
-        {
-            $this->user_id = \Yii::$app->user->id;
-            return true;
-        }
-        return false;
     }
 
 }

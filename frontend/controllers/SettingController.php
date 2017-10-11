@@ -3,28 +3,15 @@
 namespace frontend\controllers;
 
 use Yii;
-use yii\base\InvalidParamException;
-use yii\web\BadRequestHttpException;
-use yii\web\Controller;
 use frontend\models\SettingForm;
+use common\models\Setting;
+use frontend\controllers\FrontendController;
 
 /**
  * Site controller
  */
-class SettingController extends Controller
+class SettingController extends FrontendController
 {
-
-    /**
-     * @inheritdoc
-     */
-    public function actions()
-    {
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction',
-            ],
-        ];
-    }
 
     /**
      * Logs in a user.
@@ -34,7 +21,7 @@ class SettingController extends Controller
     public function actionIndex()
     {
         $model = new SettingForm();
-        $model->user_id = \Yii::$app->user->id;
+        $model->attributes = Setting::findOne(['user_id' => \Yii::$app->user->id])->attributes;
         if ($model->load(Yii::$app->request->post()) && $model->edit())
         {
             Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');

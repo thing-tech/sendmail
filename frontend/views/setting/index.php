@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             </p>
             <?= $form->field($model, 'smtp_host')->textInput(['value' => 'smtp.gmail.com']) ?>
             <?= $form->field($model, 'smtp_port')->textInput(['value' => '587']) ?>
-            <?= $form->field($model, 'smtp_ssl')->dropDownList(['SSL' => 'SSL', 'TLS' => 'TLS']) ?> 
+            <?= $form->field($model, 'smtp_encryption')->dropDownList(['SSL' => 'SSL', 'TLS' => 'TLS']) ?> 
             <?= $form->field($model, 'smtp_username') ?> 
             <?= $form->field($model, 'smtp_password') ?>
             <div class="form-group">

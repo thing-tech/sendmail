@@ -17,9 +17,10 @@ class Setting extends ActiveRecord
      */
     public function rules()
     {
-            return [
-            [['user_id','name', 'from_name', 'from_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password'], 'string'],
-            [['smtp_ssl', 'allowed_attachments'], 'string']
+        return [
+            [['name', 'from_name', 'from_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password'], 'string'],
+            [['smtp_encryption', 'allowed_attachments'], 'string'],
+            ['user_id', 'integer']
         ];
     }
 

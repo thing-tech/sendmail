@@ -17,7 +17,7 @@ class SettingForm extends Setting
     {
         return [
             [['name', 'from_name', 'from_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password'], 'required'],
-            [['smtp_ssl', 'allowed_attachments'], 'string']
+            [['smtp_smtp_encryption', 'allowed_attachments'], 'string']
         ];
     }
 

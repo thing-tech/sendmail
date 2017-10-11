@@ -29,8 +29,8 @@ AppAsset::register($this);
             <?php
             NavBar::begin([
                 'brandLabel' => Yii::$app->name,
-                'brandUrl'   => Yii::$app->homeUrl,
-                'options'    => [
+                'brandUrl' => Yii::$app->homeUrl,
+                'options' => [
                     'class' => 'navbar-inverse navbar-fixed-top',
                 ],
             ]);
@@ -39,26 +39,24 @@ AppAsset::register($this);
                 ['label' => 'About', 'url' => ['/site/about']],
                 ['label' => 'Contact', 'url' => ['/site/contact']],
             ];
-            if (Yii::$app->user->isGuest)
-            {
+            if (Yii::$app->user->isGuest) {
                 $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
                 $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-            } else
-            {
-                $menuItems[] = ['label' => 'Template', 'url' => ['/template']];
-                $menuItems[] = ['label' => 'Campaign', 'url' => ['/campaign']];
-                $menuItems[] = ['label' => 'Setting', 'url' => ['/setting']];
-                $menuItems[] = '<li>'
-                        . Html::beginForm(['/site/logout'], 'post')
-                        . Html::submitButton(
-                                'Logout (' . Yii::$app->user->identity->username . ')', ['class' => 'btn btn-link logout']
-                        )
-                        . Html::endForm()
-                        . '</li>';
+            } else {
+                $items[] = ['label' => 'Change Profile', 'url' => ['/user/changeprofile']];
+                $items[] = ['label' => 'Change Password', 'url' => ['/user/changepassword']];
+                $items[] = ['label' => 'Setting', 'url' => ['/setting']];
+                $items[] = ['label' => 'Template', 'url' => ['/template']];
+                $items[] = ['label' => 'Campaign', 'url' => ['/campaign']];
+                $items[] = ['label' => 'Logout', 'url' => ['/site/logout']];
+                $menuItems[] = ['label' => Yii::$app->user->identity->username,
+                    'items' => $items,
+                ];
+              
             }
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
-                'items'   => $menuItems,
+                'items' => $menuItems,
             ]);
             NavBar::end();
             ?>

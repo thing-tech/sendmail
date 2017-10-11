@@ -45,7 +45,7 @@ class SiteController extends FrontendController
             'verbs'  => [
                 'class'   => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post'],
+//                    'logout' => ['post'],
                 ],
             ],
         ];

@@ -13,7 +13,7 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use frontend\controllers\FrontendController;
-
+use common\models\User;
 /**
  * Site controller
  */
@@ -74,6 +74,20 @@ class SiteController extends FrontendController
      */
     public function actionIndex()
     {
+        \Yii::$app->mailer->setTransport([
+            'class'      => 'Swift_SmtpTransport',
+            'host'       => 'smtp.gmail.com',
+            'username'   => 'minaworksvn@gmail.com',
+            'password'   => 'minaworksvn17',
+            'port'       => '587',
+            'encryption' => 'tls'
+        ]);
+        $user = User::findOne(9);
+        \Yii::$app->mailer->compose('register', ['data' => $user])
+                ->setFrom(['minaworksvn@gmail.com' => 'Vinh Huynh'])
+                ->setSubject('Test')
+                ->setTo('huynhtuvinh87@gmail.com')
+                ->send();
         return $this->render('index');
     }
 

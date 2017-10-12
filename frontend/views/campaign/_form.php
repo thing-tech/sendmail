@@ -20,8 +20,13 @@ $form = ActiveForm::begin();
         <?= $form->field($model, 'reply_to')->textInput(['maxlength' => true]) ?>
     </div>
     <div class="col-lg-8">
-        <?= $form->field($model, 'template_id')->dropDownList($model->templates)->label(FALSE) ?>
-        <?= $form->field($model, 'template')->textarea(['rows' => 6]) ?>
+
+        <div class="form-group field-campaign-template">
+            <label class="control-label" for="campaign-template">Template</label>
+            <?= $form->field($model, 'template_id')->dropDownList($model->templates)->label(FALSE) ?>
+            <textarea id="campaign-template" class="tinymce" name="Campaign[template]"><?= $model->template ?></textarea>
+            <p class="help-block help-block-error"></p>
+        </div> 
     </div>
 </div>
 
@@ -30,3 +35,19 @@ $form = ActiveForm::begin();
 <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
 
 <?php ActiveForm::end(); ?>
+<?= $this->registerJs('
+    $("#campaign-template_id").on("change",function(){  
+         $.ajax({
+            url:"' . Yii::$app->urlManager->createUrl(["ajax/template"]) . '",
+            type:"POST",            
+            data:"id="+$("#campaign-template_id option:selected").val(),
+            dataType:"json",
+            success:function(data){    
+                $("#campaign-template").html(data.data.html);
+                tinymce.activeEditor.dom.remove(tinymce.activeEditor.dom.select("p"));
+                tinymce.activeEditor.insertContent(data.data.html);
+            }
+        });
+    });
+')
+?>

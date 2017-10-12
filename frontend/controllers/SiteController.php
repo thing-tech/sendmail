@@ -76,24 +76,24 @@ class SiteController extends FrontendController
      */
     public function actionIndex()
     {
-        \Yii::$app->mailer->setTransport([
-            'class'      => 'Swift_SmtpTransport',
-            'host'       => 'smtp.gmail.com',
-            'username'   => 'minaworksvn@gmail.com',
-            'password'   => 'minaworksvn17',
-            'port'       => '587',
-            'encryption' => 'tls'
-        ]);
-        $user = User::findOne(9);
-        $cam = Campaign::findOne(['user_id' => $user->id]);
-        $template = $cam->template;
-        $template = str_replace("[name]", 'Vinh', $template);
-        $template = str_replace("[email]", 'huynhtuvinh87@gmail.com', $template);
-        \Yii::$app->mailer->compose('send', ['data' => $template])
-                ->setFrom([$cam->from_email => $cam->from_name])
-                ->setSubject($cam->subject)
-                ->setTo('giicmsvn@gmail.com')
-                ->send();
+//        \Yii::$app->mailer->setTransport([
+//            'class'      => 'Swift_SmtpTransport',
+//            'host'       => 'smtp.gmail.com',
+//            'username'   => 'minaworksvn@gmail.com',
+//            'password'   => 'minaworksvn17',
+//            'port'       => '587',
+//            'encryption' => 'tls'
+//        ]);
+//        $user = User::findOne(9);
+//        $cam = Campaign::findOne(['user_id' => $user->id]);
+//        $template = $cam->template;
+//        $template = str_replace("[name]", 'Vinh', $template);
+//        $template = str_replace("[email]", 'huynhtuvinh87@gmail.com', $template);
+//        \Yii::$app->mailer->compose('send', ['data' => $template])
+//                ->setFrom([$cam->from_email => $cam->from_name])
+//                ->setSubject($cam->subject)
+//                ->setTo('giicmsvn@gmail.com')
+//                ->send();
         return $this->render('index');
     }
 

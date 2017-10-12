@@ -14,6 +14,8 @@ use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use frontend\controllers\FrontendController;
 use common\models\User;
+use common\models\Campaign;
+
 /**
  * Site controller
  */
@@ -83,10 +85,14 @@ class SiteController extends FrontendController
             'encryption' => 'tls'
         ]);
         $user = User::findOne(9);
-        \Yii::$app->mailer->compose('register', ['data' => $user])
-                ->setFrom(['minaworksvn@gmail.com' => 'Vinh Huynh'])
-                ->setSubject('Test')
-                ->setTo('huynhtuvinh87@gmail.com')
+        $cam = Campaign::findOne(['user_id' => $user->id]);
+        $template = $cam->template;
+        $template = str_replace("[name]", 'Vinh', $template);
+        $template = str_replace("[email]", 'huynhtuvinh87@gmail.com', $template);
+        \Yii::$app->mailer->compose('send', ['data' => $template])
+                ->setFrom([$cam->from_email => $cam->from_name])
+                ->setSubject($cam->subject)
+                ->setTo('giicmsvn@gmail.com')
                 ->send();
         return $this->render('index');
     }

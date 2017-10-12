@@ -5,20 +5,23 @@ namespace common\models;
 use yii\db\ActiveRecord;
 use common\models\Template;
 
-class Campaign extends ActiveRecord {
+class Campaign extends ActiveRecord
+{
 
     public $template_id;
 
-    public static function tableName() {
+    public static function tableName()
+    {
         return 'campaign';
     }
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         $rules = [
-            [['name', 'from_name', 'from_email', 'reply_to'], 'required'],
+            [['name', 'from_name', 'from_email', 'reply_to', 'subject'], 'required'],
             ['template', 'string'],
             ['template_id', 'integer']
         ];
@@ -28,17 +31,19 @@ class Campaign extends ActiveRecord {
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+    public function attributeLabels()
+    {
         return array_merge(
                 parent::attributeLabels(), [
                 ]
         );
     }
 
-    public function behaviors() {
+    public function behaviors()
+    {
         return array_merge(parent::behaviors(), [
             'timestamp' => [
-                'class' => 'yii\behaviors\TimestampBehavior',
+                'class'      => 'yii\behaviors\TimestampBehavior',
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
                     ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
@@ -47,19 +52,24 @@ class Campaign extends ActiveRecord {
         ]);
     }
 
-    public function beforeSave($insert) {
-        if (parent::beforeSave($insert)) {
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert))
+        {
             $this->user_id = \Yii::$app->user->id;
             return true;
         }
         return false;
     }
 
-    public function getTemplates() {
+    public function getTemplates()
+    {
         $model = Template::find()->where(['user_id' => \Yii::$app->user->id])->all();
         $data[] = 'Choose template';
-        if ($model) {
-            foreach ($model as $value) {
+        if ($model)
+        {
+            foreach ($model as $value)
+            {
                 $data[$value->id] = $value->name;
             }
         }

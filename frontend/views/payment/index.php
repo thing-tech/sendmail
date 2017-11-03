@@ -8,7 +8,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = \Yii::t('app', 'App');
+$this->title = \Yii::t('app', 'Payment');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="template-index">
@@ -17,13 +17,13 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-xs-12">
             <?php
             Pjax::begin([
-                'id' => 'pjax_gridview_app',
+                'id' => 'pjax_gridview_payment',
             ])
             ?>
             <?php
             $form = ActiveForm::begin([
-                        'id'      => 'campaignAction',
-                        'action'  => ['doaction'],
+                        'id' => 'paymentAction',
+                        'action' => ['doaction'],
                         'options' => [
                             'class' => 'form-inline'
                         ]
@@ -42,22 +42,24 @@ $this->params['breadcrumbs'][] = $this->title;
             <?=
             GridView::widget([
                 'dataProvider' => $dataProvider,
-                'layout'       => "{items}\n{summary}\n{pager}",
-                'columns'      => [
+                'layout' => "{items}\n{summary}\n{pager}",
+                'columns' => [
                     ['class' => 'yii\grid\SerialColumn'],
                     [
-                        'class'         => 'yii\grid\CheckboxColumn',
-                        'multiple'      => true,
+                        'class' => 'yii\grid\CheckboxColumn',
+                        'multiple' => true,
                         'headerOptions' => ['width' => 10]
                     ],
                     'name',
                     'description',
-                    'from_name',
-                    'from_email',
-                    'reply_to',
+                    'api_key',
+                    'token',
+                    'card_number',
+                    'card_month',
+                    'card_year',
                     'auth_key',
                     [
-                        'class'    => 'yii\grid\ActionColumn',
+                        'class' => 'yii\grid\ActionColumn',
                         'template' => '{update}{delete}'
                     ],
                 ],
@@ -70,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <?= $this->registerJs("
 $(document).ready(function() {
-    $('form#campaignAction button[type=submit]').click(function() {
+    $('form#paymentAction button[type=submit]').click(function() {
         return confirm('Rollback deletion of candidate table?');
     });
 });

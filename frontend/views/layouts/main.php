@@ -47,6 +47,7 @@ AppAsset::register($this);
                 $items[] = ['label' => 'Change Password', 'url' => ['/user/changepassword']];
                 $items[] = ['label' => 'App', 'url' => ['/app']];
                 $items[] = ['label' => 'Test send mail', 'url' => ['/site/sendmail']];
+                $items[] = ['label' => 'Payment', 'url' => ['/payment']];
                 $items[] = ['label' => 'Template', 'url' => ['/template']];
                 $items[] = ['label' => 'Campaign', 'url' => ['/campaign']];
                 $items[] = ['label' => 'List', 'url' => ['/list']];

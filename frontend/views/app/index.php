@@ -38,6 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <button type="submit" id="doaction" class="btn btn-default"><?= Yii::t('app', 'Apply') ?></button>
                 <?= Html::a(Yii::t('app', 'Add New'), ['create'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('app', 'Email History'), ['history'], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a(Yii::t('app', 'Email Waiting'), ['waiting'], ['class' => 'btn btn-info']) ?>
             </div>
             <?=
             GridView::widget([

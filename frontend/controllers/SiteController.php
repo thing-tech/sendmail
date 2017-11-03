@@ -110,16 +110,14 @@ class SiteController extends FrontendController
     public function actionStripe()
     {
         \Stripe\Stripe::setApiKey("sk_test_SxZK5Ize0ShMsJ3fJYX9vaMw");
-        $stripe_token = \Stripe\Token::create(array(
-                    "card" => array(
-                        "number"    => "4242424242424242",
-                        "exp_month" => "01",
-                        "exp_year"  => "19",
-                        "cvc"       => "698"
-                    )
-        ));
-        var_dump($stripe_token);
-        exit;
+//        $stripe_token = \Stripe\Token::create(array(
+//                    "card" => array(
+//                        "number"    => "4242424242424242",
+//                        "exp_month" => "01",
+//                        "exp_year"  => "19",
+//                        "cvc"       => "698"
+//                    )
+//        ));
         $token = $_POST['stripeToken'];
         $charge = \Stripe\Charge::create(array(
                     "amount"      => 1000,

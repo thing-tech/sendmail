@@ -5,7 +5,8 @@ namespace frontend\controllers;
 use Yii;
 use yii\rest\Controller;
 use common\models\App;
-use common\models\EmailQueue;
+use common\models\Payment;
+use common\components\Constant;
 
 /**
  * Default controller for the `api` module
@@ -50,15 +51,43 @@ class ApiController extends Controller
             $model = App::findOne(['auth_key' => $request->post('key')]);
             \Yii::$app->db->createCommand()
                     ->insert('email_queue', [
-                        'user_id'    => $model->id,
+                        'user_id'    => $model->user_id,
+                        'app_id'    => $model->id,
                         'from_name'  => $model->from_name,
                         'from_email' => $model->from_email,
                         'to'         => $request->post('to'),
                         'message'    => $request->post('content'),
                         'subject'    => $request->post('subject'),
-                        'status'     => 'Waiting',
+                        'status'     => Constant::APP_STATUS_WAITING,
                         'created_at' => time(),
                         'updated_at' => time(),
+                    ])
+                    ->execute();
+            return TRUE;
+        } else
+        {
+            return FALSE;
+        }
+    }
+
+    public function actionPayment()
+    {
+        $request = Yii::$app->request;
+        if ($request->post('key') && $request->post('amount') && $request->post('currency') && $request->post('description') && $request->post('email') && $request->post('name'))
+        {
+            $model = Payment::findOne(['auth_key' => $request->post('key')]);
+            \Yii::$app->db->createCommand()
+                    ->insert('payment_queue', [
+                        'user_id'      => $model->user_id,
+                        'payment_id'   => $model->id,
+                        'sender_name'  => $request->post('name'),
+                        'sender_email' => $request->post('email'),
+                        'amount'       => $request->post('amount'),
+                        'currency'     => $request->post('currency'),
+                        'description'  => $request->post('description'),
+                        'status'       => Constant::PAYMENT_STATUS_WAITING,
+                        'created_at'   => time(),
+                        'updated_at'   => time(),
                     ])
                     ->execute();
             return TRUE;

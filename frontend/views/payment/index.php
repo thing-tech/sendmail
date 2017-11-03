@@ -22,8 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ?>
             <?php
             $form = ActiveForm::begin([
-                        'id' => 'paymentAction',
-                        'action' => ['doaction'],
+                        'id'      => 'paymentAction',
+                        'action'  => ['doaction'],
                         'options' => [
                             'class' => 'form-inline'
                         ]
@@ -38,16 +38,18 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
                 <button type="submit" id="doaction" class="btn btn-default"><?= Yii::t('app', 'Apply') ?></button>
                 <?= Html::a(Yii::t('app', 'Add New'), ['create'], ['class' => 'btn btn-success']) ?>
+                <?= Html::a(Yii::t('app', 'Payment History'), ['history'], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a(Yii::t('app', 'Payment Waiting'), ['waiting'], ['class' => 'btn btn-info']) ?>
             </div>
             <?=
             GridView::widget([
                 'dataProvider' => $dataProvider,
-                'layout' => "{items}\n{summary}\n{pager}",
-                'columns' => [
+                'layout'       => "{items}\n{summary}\n{pager}",
+                'columns'      => [
                     ['class' => 'yii\grid\SerialColumn'],
                     [
-                        'class' => 'yii\grid\CheckboxColumn',
-                        'multiple' => true,
+                        'class'         => 'yii\grid\CheckboxColumn',
+                        'multiple'      => true,
                         'headerOptions' => ['width' => 10]
                     ],
                     'name',
@@ -59,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     'card_year',
                     'auth_key',
                     [
-                        'class' => 'yii\grid\ActionColumn',
+                        'class'    => 'yii\grid\ActionColumn',
                         'template' => '{update}{delete}'
                     ],
                 ],

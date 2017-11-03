@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 use frontend\models\AppForm;
 use common\models\Subscriber;
 use common\models\EmailQueue;
-use common\models\Customer;
+use common\models\EmailHistory;
 use frontend\controllers\FrontendController;
 
 /**
@@ -33,6 +33,34 @@ class AppController extends FrontendController
         ]);
 
         return $this->render('index', [
+                    'dataProvider' => $dataProvider
+        ]);
+    }
+
+    public function actionHistory()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query'      => EmailHistory::find()->orderBy('created_at DESC'),
+            'pagination' => [
+                'defaultPageSize' => 20
+            ],
+        ]);
+
+        return $this->render('history', [
+                    'dataProvider' => $dataProvider
+        ]);
+    }
+
+    public function actionWaiting()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query'      => EmailQueue::find()->orderBy('created_at DESC'),
+            'pagination' => [
+                'defaultPageSize' => 20
+            ],
+        ]);
+
+        return $this->render('waiting', [
                     'dataProvider' => $dataProvider
         ]);
     }

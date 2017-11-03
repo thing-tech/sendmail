@@ -11,19 +11,19 @@ use common\models\User;
  * @property string $name
  * @property string $sectors
  */
-class Template extends ActiveRecord
+class Subscriber extends ActiveRecord
 {
 
     public static function tableName()
     {
-        return 'template';
+        return 'subscriber';
     }
 
     public function rules()
     {
         return [
             [['name'], 'required'],
-            [['html'], 'string']
+            [['email'], 'string']
         ];
     }
 

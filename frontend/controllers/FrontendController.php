@@ -22,7 +22,7 @@ class FrontendController extends Controller
         ];
     }
 
-    protected function sendemail($template, $data, $role = NULL)
+    protected function sendemail($from_email, $from_name, $subject, $to, $template, $data, $role = NULL)
     {
 
         if (!empty($role))

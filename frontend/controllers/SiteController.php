@@ -13,8 +13,8 @@ use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
 use frontend\controllers\FrontendController;
-use common\models\User;
-use common\models\Campaign;
+use frontend\models\TestSendMail;
+use Stripe\Stripe;
 
 /**
  * Site controller
@@ -69,6 +69,12 @@ class SiteController extends FrontendController
         ];
     }
 
+    public function beforeAction($action)
+    {
+        $this->enableCsrfValidation = false;
+        return parent::beforeAction($action);
+    }
+
     /**
      * Displays homepage.
      *
@@ -94,7 +100,55 @@ class SiteController extends FrontendController
 //                ->setSubject($cam->subject)
 //                ->setTo('giicmsvn@gmail.com')
 //                ->send();
+//        Stripe::setApiKey('sk_test_SxZK5Ize0ShMsJ3fJYX9vaMw');
+//        $charge = \Stripe\Charge::create(array('amount' => 2000, 'currency' => 'usd', 'source' => 'rk_test_XWyFfnZeXzqtqhaio4D08AlB'));
+//        var_dump($charge); exit;
+//        echo $charge;
         return $this->render('index');
+    }
+
+    public function actionStripe()
+    {
+        \Stripe\Stripe::setApiKey("sk_test_SxZK5Ize0ShMsJ3fJYX9vaMw");
+        $stripe_token = \Stripe\Token::create(array(
+                    "card" => array(
+                        "number"    => "4242424242424242",
+                        "exp_month" => "01",
+                        "exp_year"  => "19",
+                        "cvc"       => "698"
+                    )
+        ));
+        var_dump($stripe_token);
+        exit;
+        $token = $_POST['stripeToken'];
+        $charge = \Stripe\Charge::create(array(
+                    "amount"      => 1000,
+                    "currency"    => "usd",
+                    "description" => "Example charge",
+                    "source"      => $token,
+        ));
+    }
+
+    public function actionSendmail()
+    {
+        $model = new TestSendMail();
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if ($model->sendEmail())
+            {
+                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
+            } else
+            {
+                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
+            }
+
+            return $this->refresh();
+        } else
+        {
+            return $this->render('sendmail', [
+                        'model' => $model,
+            ]);
+        }
     }
 
     /**

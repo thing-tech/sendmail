@@ -45,9 +45,11 @@ AppAsset::register($this);
             } else {
                 $items[] = ['label' => 'Change Profile', 'url' => ['/user/changeprofile']];
                 $items[] = ['label' => 'Change Password', 'url' => ['/user/changepassword']];
-                $items[] = ['label' => 'Setting', 'url' => ['/setting']];
+                $items[] = ['label' => 'App', 'url' => ['/app']];
+                $items[] = ['label' => 'Test send mail', 'url' => ['/site/sendmail']];
                 $items[] = ['label' => 'Template', 'url' => ['/template']];
                 $items[] = ['label' => 'Campaign', 'url' => ['/campaign']];
+                $items[] = ['label' => 'List', 'url' => ['/list']];
                 $items[] = ['label' => 'Logout', 'url' => ['/site/logout']];
                 $menuItems[] = ['label' => Yii::$app->user->identity->username,
                     'items' => $items,

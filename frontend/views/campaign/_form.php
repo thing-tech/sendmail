@@ -20,8 +20,8 @@ $form = ActiveForm::begin();
         <?= $form->field($model, 'from_email')->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'reply_to')->textInput(['maxlength' => true]) ?>
 
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-
+        <?= Html::submitButton('Save', ['class' => 'btn btn-primary', 'name' => 'submit', 'value' => 'save']) ?>
+        <?= Html::submitButton('Save and Send', ['class' => 'btn btn-suucess', 'name' => 'submit', 'value' => 'save_send']) ?>
     </div>
     <div class="col-lg-8">
 

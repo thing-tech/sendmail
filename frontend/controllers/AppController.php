@@ -3,18 +3,19 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\Campaign;
-use common\models\Setting;
+use common\models\App;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
-use frontend\models\SendForm;
+use frontend\models\AppForm;
 use common\models\Subscriber;
+use common\models\EmailQueue;
+use common\models\Customer;
 use frontend\controllers\FrontendController;
 
 /**
- * Campaign controller
+ * App controller
  */
-class CampaignController extends FrontendController
+class AppController extends FrontendController
 {
 
     /**
@@ -25,7 +26,7 @@ class CampaignController extends FrontendController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query'      => Campaign::find()->orderBy('created_at DESC'),
+            'query'      => App::find()->orderBy('created_at DESC'),
             'pagination' => [
                 'defaultPageSize' => 20
             ],
@@ -38,9 +39,8 @@ class CampaignController extends FrontendController
 
     public function actionCreate()
     {
-        $model = new Campaign();
-        $model->attributes = Setting::findOne(['user_id' => \Yii::$app->user->id])->attributes;
-        if ($model->load(Yii::$app->request->post()) && $model->save())
+        $model = new AppForm();
+        if ($model->load(Yii::$app->request->post()) && $model->savedata())
         {
             \Yii::$app->session->setFlash('success', \Yii::t('app', 'Add new success'));
             return $this->redirect(['index']);
@@ -59,16 +59,11 @@ class CampaignController extends FrontendController
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-        if ($model->load(Yii::$app->request->post()) && $model->save())
+
+        $model = new AppForm(['id' => $id]);
+        if ($model->load(Yii::$app->request->post()) && $model->savedata())
         {
-            if ($_POST['submit'] == 'save')
-            {
-                return $this->redirect(['index']);
-            } else
-            {
-                return $this->redirect(['send', 'id' => $id]);
-            }
+            return $this->redirect(['index']);
         } else
         {
             return $this->render('update', [
@@ -156,7 +151,7 @@ class CampaignController extends FrontendController
      */
     protected function findModel($id)
     {
-        if (($model = Campaign::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id])) !== null)
+        if (($model = App::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id])) !== null)
         {
             return $model;
         } else

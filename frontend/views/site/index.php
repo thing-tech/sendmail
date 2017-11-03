@@ -1,5 +1,4 @@
 <?php
-
 /* @var $this yii\web\View */
 
 $this->title = 'My Yii Application';
@@ -26,6 +25,19 @@ $this->title = 'My Yii Application';
                     fugiat nulla pariatur.</p>
 
                 <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+                <p>
+                <form action="/site/stripe" method="POST">
+                    <script
+                        src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                        data-key="pk_test_pYl6MItHwJFrGsyIwgaD5sej"
+                        data-amount="999"
+                        data-name="Demo Site"
+                        data-description="Widget"
+                        data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                        data-locale="auto">
+                    </script>
+                </form>
+                </p>
             </div>
             <div class="col-lg-4">
                 <h2>Heading</h2>

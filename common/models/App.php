@@ -5,31 +5,37 @@ namespace common\models;
 use yii\db\ActiveRecord;
 use common\models\User;
 
-/**
- * Location model
- *
- * @property string $name
- * @property string $sectors
- */
-class Template extends ActiveRecord
+class App extends ActiveRecord
 {
 
     public static function tableName()
     {
-        return 'template';
+        return 'app';
     }
 
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
-            [['name'], 'required'],
-            [['html'], 'string']
+            [['name', 'from_name', 'from_email', 'reply_to', 'smtp_host', 'smtp_port', 'smtp_username', 'smtp_password', 'description'], 'string'],
+            [['smtp_encryption', 'allowed_attachments'], 'string'],
+            ['user_id', 'integer']
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [
+            'name'          => 'App Name',
+            'smtp_host'     => 'Host',
+            'smtp_port'     => 'Port',
+            'smtp_username' => 'Username',
+            'smtp_password' => 'Application code'
         ];
     }
 
@@ -51,6 +57,7 @@ class Template extends ActiveRecord
         if (parent::beforeSave($insert))
         {
             $this->user_id = \Yii::$app->user->id;
+
             return true;
         }
         return false;

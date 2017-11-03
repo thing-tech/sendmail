@@ -3,18 +3,15 @@
 namespace frontend\controllers;
 
 use Yii;
-use common\models\Campaign;
-use common\models\Setting;
+use common\models\RecipientList;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
-use frontend\models\SendForm;
-use common\models\Subscriber;
 use frontend\controllers\FrontendController;
 
 /**
- * Campaign controller
+ * Template controller
  */
-class CampaignController extends FrontendController
+class ListController extends FrontendController
 {
 
     /**
@@ -25,7 +22,7 @@ class CampaignController extends FrontendController
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query'      => Campaign::find()->orderBy('created_at DESC'),
+            'query'      => RecipientList::find()->orderBy('created_at DESC'),
             'pagination' => [
                 'defaultPageSize' => 20
             ],
@@ -38,10 +35,10 @@ class CampaignController extends FrontendController
 
     public function actionCreate()
     {
-        $model = new Campaign();
-        $model->attributes = Setting::findOne(['user_id' => \Yii::$app->user->id])->attributes;
+        $model = new RecipientList();
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
+
             \Yii::$app->session->setFlash('success', \Yii::t('app', 'Add new success'));
             return $this->redirect(['index']);
         } else
@@ -62,13 +59,7 @@ class CampaignController extends FrontendController
         $model = $this->findModel($id);
         if ($model->load(Yii::$app->request->post()) && $model->save())
         {
-            if ($_POST['submit'] == 'save')
-            {
-                return $this->redirect(['index']);
-            } else
-            {
-                return $this->redirect(['send', 'id' => $id]);
-            }
+            return $this->redirect(['index']);
         } else
         {
             return $this->render('update', [
@@ -103,50 +94,6 @@ class CampaignController extends FrontendController
         return $this->redirect(['index']);
     }
 
-    public function actionSend($id)
-    {
-        $model = $this->findModel($id);
-        $send = new SendForm();
-        $send->attributes = $model->attributes;
-        if ($send->load(Yii::$app->request->post()))
-        {
-            $setting = Setting::findOne(['user_id' => \Yii::$app->user->id]);
-            \Yii::$app->mailer->setTransport([
-                'class'      => 'Swift_SmtpTransport',
-                'host'       => $setting->smtp_host,
-                'username'   => $setting->smtp_username,
-                'password'   => $setting->smtp_password,
-                'port'       => $setting->smtp_port,
-                'encryption' => $setting->smtp_encryption
-            ]);
-
-            $mails = Subscriber::find()->where(['list_id' => $send->list])->all();
-            if ($mails)
-            {
-                foreach ($mails as $key => $value)
-                {
-                    $template = $send->template;
-                    $template = str_replace("[name]", $value->name, $template);
-                    $template = str_replace("[email]", $value->email, $template);
-                    \Yii::$app->mailer->compose('send', ['data' => $template])
-                            ->setFrom([$send->from_email => $send->from_name])
-                            ->setSubject($model->subject)
-                            ->setTo($value->email)
-                            ->send();
-                }
-
-                \Yii::$app->session->setFlash('success', \Yii::t('app', 'Send mail success'));
-            }
-            return $this->redirect(['send', 'id' => $id]);
-        } else
-        {
-            return $this->render('send', [
-                        'model' => $model,
-                        'send'  => $send
-            ]);
-        }
-    }
-
     /**
      * Finds the Category model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -156,7 +103,7 @@ class CampaignController extends FrontendController
      */
     protected function findModel($id)
     {
-        if (($model = Campaign::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id])) !== null)
+        if (($model = RecipientList::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id])) !== null)
         {
             return $model;
         } else

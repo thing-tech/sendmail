@@ -21,7 +21,11 @@
         "yiisoft/yii2-imagine": "*",
         "pavlinter/yii2-display-image": "dev-master",
         "fabpot/goutte": "^3.2",
-        "fedemotta/yii2-cronjob": "*"
+        "fedemotta/yii2-cronjob": "*",
+        "phpoffice/phpexcel": "*",
+        "yiisoft/yii2-redis": "^2.0",
+        "yiisoft/yii2-queue": "^2.0",
+        "stripe/stripe-php": "^5.6"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

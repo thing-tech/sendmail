@@ -6,6 +6,7 @@ use Yii;
 use common\models\Payment;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use frontend\models\PaymentForm;
 use common\models\Subscriber;
 use common\models\PaymentHistory;
@@ -18,16 +19,37 @@ use frontend\controllers\FrontendController;
 class PaymentController extends FrontendController
 {
 
+    
     public $_newModel;
     public $_findModel;
+    
 
     public function init()
     {
         parent::init();
         $this->_newModel = new PaymentForm;
-        $this->_findModel = Payment::find();
+        $this->_findModel = Payment::find()->where(['user_id'=> \Yii::$app->user->id]);
     }
 
+            /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only'  => ['index', 'history','waiting','create','update','delete','send'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'history','waiting','create','update','delete','send'],
+                        'allow'   => true,
+                        'roles'   => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
     /**
      * Logs in a user.
      *
@@ -50,7 +72,7 @@ class PaymentController extends FrontendController
     public function actionHistory()
     {
         $dataProvider = new ActiveDataProvider([
-            'query'      => PaymentHistory::find()->orderBy('created_at DESC'),
+            'query'      => PaymentHistory::find()->where(['user_id'=> \Yii::$app->user->id])->orderBy('created_at DESC'),
             'pagination' => [
                 'defaultPageSize' => 20
             ],
@@ -64,7 +86,7 @@ class PaymentController extends FrontendController
     public function actionWaiting()
     {
         $dataProvider = new ActiveDataProvider([
-            'query'      => PaymentQueue::find()->orderBy('created_at DESC'),
+            'query'      => PaymentQueue::find()->where(['user_id'=> \Yii::$app->user->id])->orderBy('created_at DESC'),
             'pagination' => [
                 'defaultPageSize' => 20
             ],
@@ -189,7 +211,7 @@ class PaymentController extends FrontendController
      */
     protected function findModel($id)
     {
-        if (($model = App::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id])) !== null)
+        if (($model = Payment::findOne(['id' => $id, 'user_id' => \Yii::$app->user->id])) !== null)
         {
             return $model;
         } else

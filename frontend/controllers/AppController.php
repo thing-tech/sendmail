@@ -6,6 +6,7 @@ use Yii;
 use common\models\App;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use frontend\models\AppForm;
 use common\models\Subscriber;
 use common\models\EmailQueue;
@@ -18,6 +19,25 @@ use frontend\controllers\FrontendController;
 class AppController extends FrontendController
 {
 
+        /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only'  => ['index', 'history','waiting','create','update','delete'],
+                'rules' => [
+                    [
+                        'actions' => ['index', 'history','waiting','create','update','delete'],
+                        'allow'   => true,
+                        'roles'   => ['@'],
+                    ],
+                ],
+            ],
+        ];
+    }
     /**
      * Logs in a user.
      *

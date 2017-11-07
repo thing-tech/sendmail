@@ -13,20 +13,25 @@ class Constant
 {
 
     const APP_STATUS_WAITING = 1;
-    const APP_STATUS_PENDDING = 2;
+    const APP_STATUS_PROCESSING = 2;
     const APP_STATUS_SUCCESS = 3;
+    const APP_STATUS_ERROR = 4;
     const PAYMENT_STATUS_WAITING = 1;
-    const PAYMENT_STATUS_PENDING = 2;
+    const PAYMENT_STATUS_PROCESSING = 2;
     const PAYMENT_STATUS_SUCCESS = 3;
-    const APP_STATUS = [
-        1 => 'Waiting',
-        2 => 'Pending',
-        3 => 'Success'
+    const PAYMENT_STATUS_ERROR = 4;
+
+    public static $app_status = [
+        self::APP_STATUS_WAITING    => 'Waiting',
+        self::APP_STATUS_PROCESSING => 'Processing',
+        self::APP_STATUS_SUCCESS  => 'Success',
+        self::APP_STATUS_ERROR    => 'Error'
     ];
-    const PAYMENT_STATUS = [
-        1 => 'Waiting',
-        2 => 'Pending',
-        3 => 'Success'
+    public static $payment_status = [
+        self::PAYMENT_STATUS_WAITING  => 'Waiting',
+        self::PAYMENT_STATUS_PROCESSING => 'Processing',
+        self::PAYMENT_STATUS_SUCCESS  => 'Success',
+        self::PAYMENT_STATUS_ERROR    => 'Error'
     ];
 
 }

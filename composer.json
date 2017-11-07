@@ -25,7 +25,8 @@
         "phpoffice/phpexcel": "*",
         "yiisoft/yii2-redis": "^2.0",
         "yiisoft/yii2-queue": "^2.0",
-        "stripe/stripe-php": "^5.6"
+        "stripe/stripe-php": "^5.6",
+        "phpmailer/phpmailer": "~6.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

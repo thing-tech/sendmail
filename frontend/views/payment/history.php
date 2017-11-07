@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format'    => 'raw',
                         'value'     => function($data)
                         {
-                            return Constant::PAYMENT_STATUS[$data->status];
+                            return Constant::$payment_status[$data->status];
                         },
                     ],
                     'description',

@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'format'    => 'raw',
                         'value'     => function($data)
                         {
-                            return Constant::APP_STATUS[$data->status];
+                            return Constant::$app_status[$data->status];
                         },
                     ],
                     [

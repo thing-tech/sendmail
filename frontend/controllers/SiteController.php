@@ -82,6 +82,7 @@ class SiteController extends FrontendController
      */
     public function actionIndex()
     {
+
 //        \Yii::$app->mailer->setTransport([
 //            'class'      => 'Swift_SmtpTransport',
 //            'host'       => 'smtp.gmail.com',
@@ -129,6 +130,7 @@ class SiteController extends FrontendController
 
     public function actionSendmail()
     {
+        \common\widgets\SendMail::widget();
         $model = new TestSendMail();
         if ($model->load(Yii::$app->request->post()) && $model->validate())
         {

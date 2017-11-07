@@ -27,6 +27,7 @@ class EmailHistory extends \yii\db\ActiveRecord
             [['from_name', 'from_email', 'to', 'subject', 'message'], 'string'],
 //            [['date_published', 'date_sent', 'success', 'attempts', 'max_attempts'], 'integer']
         ];
+      
     }
 
 

@@ -10,48 +10,40 @@ namespace console\controllers;
 
 use Yii;
 use yii\console\Controller;
-use common\models\App;
+use common\components\Constant;
+use common\components\SendMail;
+use common\models\EmailQueue;
 
 class MailController extends Controller
 {
 
     public function actionSend()
     {
-        $emailqueue = Yii::$app->db->createCommand('SELECT * FROM email_history')->queryAll();
-        foreach ($emailqueue as $value)
+        $emailqueue = EmailQueue::find()->orderBy(['created_at'=>SORT_ASC])->all();
+        if ($emailqueue)
         {
-            Yii::$app->db->createCommand()->update('email_queue', ['status' => 'Processing'], 'id = ' . $value['id'])->execute();
-            $model = App::findOne($value['user_id']);
-            \Yii::$app->mailer->setTransport([
-                'class'      => 'Swift_SmtpTransport',
-                'host'       => $model->smtp_host,
-                'username'   => $model->smtp_username,
-                'password'   => $model->smtp_password,
-                'port'       => $model->smtp_port,
-                'encryption' => $model->smtp_encryption
-            ]);
-            $send = \Yii::$app->mailer->compose('send', ['data' => $value['message']])
-                    ->setFrom([$value['from_email'] => $value['from_name']])
-                    ->setSubject($value['subject'])
-                    ->setTo($value['to'])
-                    ->send();
-            if ($send)
+            foreach ($emailqueue as $value)
             {
-                $status = 'Success';
-            } else
-            {
-                $status = 'Error';
+                Yii::$app->db->createCommand()->update('email_queue', ['status' => Constant::APP_STATUS_PROCESSING], 'id = ' . $value['id'])->execute();
+                if (SendMail::send($value))
+                {
+                    $status = Constant::APP_STATUS_SUCCESS;
+                } else
+                {
+                    $status = Constant::APP_STATUS_ERROR;
+                }
+                Yii::$app->db->createCommand()
+                        ->insert('email_history', [
+                            'user_id'    => $value['user_id'],
+                            'app_id'     => $value['app_id'],
+                            'to'         => $value['to'],
+                            'status'     => $status,
+                            'created_at' => time(),
+                            'updated_at' => time(),
+                        ])
+                        ->execute();
+                Yii::$app->db->createCommand()->delete('email_queue', 'id = ' . $value['id'])->execute();
             }
-            Yii::$app->db->createCommand()
-                    ->insert('email_history', [
-                        'user_id'    => $value['user_id'],
-                        'to'         => $value['to'],
-                        'status'     => $status,
-                        'created_at' => time(),
-                        'updated_at' => time(),
-                    ])
-                    ->execute();
-            Yii::$app->db->createCommand()->delete('email_queue', 'id = ' . $value['id'])->execute();
         }
     }
 

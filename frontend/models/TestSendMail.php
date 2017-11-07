@@ -51,4 +51,29 @@ class TestSendMail extends Model
         }
     }
 
+    public static function send()
+    {
+        $model = App::findOne(1);
+        if (!empty($model))
+        {
+            \Yii::$app->mailer->setTransport([
+                'class'      => 'Swift_SmtpTransport',
+                'host'       => $model->smtp_host,
+                'username'   => $model->smtp_username,
+                'password'   => $model->smtp_password,
+                'port'       => $model->smtp_port,
+                'encryption' => $model->smtp_encryption
+            ]);
+            $send = \Yii::$app->mailer->compose('send', ['data' => 'saaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'])
+                    ->setFrom([$model->from_email => $model->from_name])
+                    ->setSubject('sssssssssssssssss')
+                    ->setTo('huynhtuvinh87@gmail.com')
+                    ->send();
+            return TRUE;
+        } else
+        {
+            return FALSE;
+        }
+    }
+
 }

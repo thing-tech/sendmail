@@ -29,5 +29,9 @@ class EmailQueue extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getApp()
+    {
+        return $this->hasOne(App::className(), ['id' => 'app_id']);
+    }
 
 }

@@ -15,36 +15,37 @@ use frontend\models\ContactForm;
 use frontend\controllers\FrontendController;
 use frontend\models\TestSendMail;
 use Stripe\Stripe;
-use DownloadJob;
 
 /**
  * Site controller
  */
-class SiteController extends FrontendController {
+class SiteController extends FrontendController
+{
 
     /**
      * @inheritdoc
      */
-    public function behaviors() {
+    public function behaviors()
+    {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only'  => ['logout', 'signup'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
-                        'allow' => true,
-                        'roles' => ['?'],
+                        'allow'   => true,
+                        'roles'   => ['?'],
                     ],
                     [
                         'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
+                        'allow'   => true,
+                        'roles'   => ['@'],
                     ],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
+            'verbs'  => [
+                'class'   => VerbFilter::className(),
                 'actions' => [
 //                    'logout' => ['post'],
                 ],
@@ -55,19 +56,21 @@ class SiteController extends FrontendController {
     /**
      * @inheritdoc
      */
-    public function actions() {
+    public function actions()
+    {
         return [
-            'error' => [
+            'error'   => [
                 'class' => 'yii\web\ErrorAction',
             ],
             'captcha' => [
-                'class' => 'yii\captcha\CaptchaAction',
+                'class'           => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
         ];
     }
 
-    public function beforeAction($action) {
+    public function beforeAction($action)
+    {
         $this->enableCsrfValidation = false;
         return parent::beforeAction($action);
     }
@@ -77,7 +80,9 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex()
+    {
+
 //        \Yii::$app->mailer->setTransport([
 //            'class'      => 'Swift_SmtpTransport',
 //            'host'       => 'smtp.gmail.com',
@@ -100,11 +105,11 @@ class SiteController extends FrontendController {
 //        $charge = \Stripe\Charge::create(array('amount' => 2000, 'currency' => 'usd', 'source' => 'rk_test_XWyFfnZeXzqtqhaio4D08AlB'));
 //        var_dump($charge); exit;
 //        echo $charge;
-
         return $this->render('index');
     }
 
-    public function actionStripe() {
+    public function actionStripe()
+    {
         \Stripe\Stripe::setApiKey("sk_test_SxZK5Ize0ShMsJ3fJYX9vaMw");
 //        $stripe_token = \Stripe\Token::create(array(
 //                    "card" => array(
@@ -116,24 +121,30 @@ class SiteController extends FrontendController {
 //        ));
         $token = $_POST['stripeToken'];
         $charge = \Stripe\Charge::create(array(
-                    "amount" => 1000,
-                    "currency" => "usd",
+                    "amount"      => 1000,
+                    "currency"    => "usd",
                     "description" => "Example charge",
-                    "source" => $token,
+                    "source"      => $token,
         ));
     }
 
-    public function actionSendmail() {
+    public function actionSendmail()
+    {
+        \common\widgets\SendMail::widget();
         $model = new TestSendMail();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if ($model->sendEmail())
+            {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
+            } else
+            {
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
 
             return $this->refresh();
-        } else {
+        } else
+        {
             return $this->render('sendmail', [
                         'model' => $model,
             ]);
@@ -145,15 +156,19 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionLogin() {
-        if (!Yii::$app->user->isGuest) {
+    public function actionLogin()
+    {
+        if (!Yii::$app->user->isGuest)
+        {
             return $this->goHome();
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ($model->load(Yii::$app->request->post()) && $model->login())
+        {
             return $this->goBack();
-        } else {
+        } else
+        {
             return $this->render('login', [
                         'model' => $model,
             ]);
@@ -165,7 +180,8 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Yii::$app->user->logout();
 
         return $this->goHome();
@@ -176,17 +192,22 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionContact() {
+    public function actionContact()
+    {
         $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if ($model->sendEmail(Yii::$app->params['adminEmail']))
+            {
                 Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
+            } else
+            {
                 Yii::$app->session->setFlash('error', 'There was an error sending your message.');
             }
 
             return $this->refresh();
-        } else {
+        } else
+        {
             return $this->render('contact', [
                         'model' => $model,
             ]);
@@ -198,7 +219,8 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionAbout() {
+    public function actionAbout()
+    {
         return $this->render('about');
     }
 
@@ -207,18 +229,21 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionSignup() {
+    public function actionSignup()
+    {
         $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($user = $model->signup())
+            {
 //                if (Yii::$app->getUser()->login($user))
 //                {
 //                    
 //                }
                 $data = [
                     'subject' => 'Dang ky tai khoan',
-                    'to' => $user->email,
-                    'user' => $user
+                    'to'      => $user->email,
+                    'user'    => $user
                 ];
                 $this->sendemail('register', $data, 'support');
                 return $this->goHome();
@@ -235,14 +260,18 @@ class SiteController extends FrontendController {
      *
      * @return mixed
      */
-    public function actionRequestPasswordReset() {
+    public function actionRequestPasswordReset()
+    {
         $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate())
+        {
+            if ($model->sendEmail())
+            {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
                 return $this->goHome();
-            } else {
+            } else
+            {
                 Yii::$app->session->setFlash('error', 'Sorry, we are unable to reset password for the provided email address.');
             }
         }
@@ -259,14 +288,18 @@ class SiteController extends FrontendController {
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionResetPassword($token) {
-        try {
+    public function actionResetPassword($token)
+    {
+        try
+        {
             $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
+        } catch (InvalidParamException $e)
+        {
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword())
+        {
             Yii::$app->session->setFlash('success', 'New password saved.');
 
             return $this->goHome();

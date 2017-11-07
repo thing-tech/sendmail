@@ -23,15 +23,16 @@
         "fabpot/goutte": "^3.2",
         "fedemotta/yii2-cronjob": "*",
         "phpoffice/phpexcel": "*",
-        "yiisoft/yii2-redis": "^2.0",
-        "yiisoft/yii2-queue": "^2.0",
-        "stripe/stripe-php": "^5.6"
+        "stripe/stripe-php": "^5.6",
+        "phpmailer/phpmailer": "^6.0",
+        "paypal/rest-api-sdk-php": "0.8.*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
         "yiisoft/yii2-gii": "~2.0.0",
         "yiisoft/yii2-faker": "~2.0.0",
-
+        "yiisoft/yii2-redis": "^2.0",
+        "yiisoft/yii2-queue": "^2.0",
         "codeception/base": "^2.2.3",
         "codeception/verify": "~0.3.1"
     },
